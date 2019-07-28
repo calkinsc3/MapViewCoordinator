@@ -10,10 +10,16 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        MapView(coordinate: testCoordinate)
-            .edgesIgnoringSafeArea(.top)
-            .frame(height: 300)
+        VStack (alignment: .leading, spacing: 10) {
+            MapView(coordinate: testCoordinate)
+                .edgesIgnoringSafeArea(.top)
+                .frame(height: 300)
+            Text("Coordinator Test")
+            
+        }
+        
     }
+    
 }
 
 #if DEBUG
