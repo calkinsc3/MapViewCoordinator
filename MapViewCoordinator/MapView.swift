@@ -34,6 +34,7 @@ struct MapView: UIViewRepresentable {
         var parent: MapView
         private let locationManager = LocationManager()
         private var locationManagerObserver : NSKeyValueObservation?
+        private var foregroundManagerObserver : NSObjectProtocol?
         
         init(_ mapView: MapView) {
             self.parent = mapView
@@ -46,12 +47,16 @@ struct MapView: UIViewRepresentable {
             
             //use KVO to listen to location changes
             locationManagerObserver = locationManager.observe((\LocationManager.currentLocation), changeHandler: { [weak self] (locationManager, keyPathObserved) in
-                
                 if let location = locationManager.currentLocation {
                     print("given location is \(location.coordinate)")
                     self?.parent.coordinate = location.coordinate
                 }
-                
+            })
+            
+            let name = UIApplication.willEnterForegroundNotification
+            foregroundManagerObserver = NotificationCenter.default.addObserver(forName: name, object: nil, queue: nil, using: { [weak self](_) in
+                //Get a new location when returning from settings
+                self?.locationManager.requestLocation()
             })
             
         }
